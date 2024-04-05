@@ -26,4 +26,8 @@ public class ConventionService {
         return conventionRepository.getConventionByName(name);
     }
 
+    public Convention saveConvention(Convention convention) {
+        return conventionRepository.save(convention);
+    }
+
 }
