@@ -21,30 +21,22 @@ public class Convention {
     private LocalDate startDate;
     private LocalDate endDate;
     private String description;
+    private String logo;
     @Enumerated(EnumType.STRING)
     private ConventionStatus conventionStatus;
 
     @ManyToOne
     private AppUser user;
-
-    @OneToOne
-    private Schedule schedule;
-
-    @OneToOne
-    private Logo logo;
-
-    @OneToMany
+    @OneToMany(mappedBy = "convention")
+    private List<Day> days;
+    @OneToMany(mappedBy = "convention")
     private List<Address> addresses;
-
-    @OneToMany
+    @OneToMany(mappedBy = "convention")
     private List<TicketPrice> ticketPrices;
-
-    @OneToMany
+    @OneToMany(mappedBy = "convention")
     private List<Link> links;
-
-    @OneToMany
+    @OneToMany(mappedBy = "convention")
     private List<Tag> tags;
-
-    @OneToMany
+    @OneToMany(mappedBy = "convention")
     private List<Photo> photos;
 }

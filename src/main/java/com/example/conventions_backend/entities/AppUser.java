@@ -23,7 +23,7 @@ public class AppUser {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Convention> conventions;
 
 }

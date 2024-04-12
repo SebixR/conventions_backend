@@ -18,6 +18,7 @@ public class ConventionDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private String description;
+    private String logo;
     @Enumerated(EnumType.STRING)
     private ConventionStatus conventionStatus;
 
@@ -27,6 +28,7 @@ public class ConventionDto {
         conventionDto.setStartDate(convention.getStartDate());
         conventionDto.setEndDate(convention.getEndDate());
         conventionDto.setDescription(convention.getDescription());
+        conventionDto.setLogo(convention.getLogo());
         conventionDto.setConventionStatus(convention.getConventionStatus());
 
         return conventionDto;

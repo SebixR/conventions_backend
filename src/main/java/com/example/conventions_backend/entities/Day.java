@@ -20,7 +20,7 @@ public class Day {
     private LocalDate date;
 
     @ManyToOne
-    private Schedule schedule;
+    private Convention convention;
 
     @OneToMany
     private List<Event> events;

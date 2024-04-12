@@ -17,7 +17,7 @@ public class ConventionController {
         this.conventionService = conventionService;
     }
     @GetMapping("/getConvention/{id}") //handles GET requests
-    public ResponseEntity<Convention> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id into the Long variable
+    public ResponseEntity<Convention> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id from the url into the Long variable
         Optional<Convention> conventionOptional = conventionService.getConvention(id);
         if (conventionOptional.isPresent()) {
             return ResponseEntity.ok(conventionOptional.get());
@@ -34,9 +34,10 @@ public class ConventionController {
         convention.setStartDate(conventionDto.getStartDate());
         convention.setEndDate(conventionDto.getEndDate());
         convention.setDescription(conventionDto.getDescription());
+        convention.setLogo(convention.getLogo());
         convention.setConventionStatus(conventionDto.getConventionStatus());
 
-        //TODO all the relationships with the other tables
+        //TODO connect with a user
 
         Convention savedConvention = conventionService.saveConvention(convention);
 
