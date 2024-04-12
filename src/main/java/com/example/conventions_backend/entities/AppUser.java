@@ -21,7 +21,7 @@ public class AppUser {
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private UserRole role;
 
     @OneToMany(mappedBy = "user")
     private List<Convention> conventions;

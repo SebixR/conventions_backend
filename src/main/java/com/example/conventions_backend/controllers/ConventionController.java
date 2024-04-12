@@ -16,6 +16,7 @@ public class ConventionController {
     public ConventionController(ConventionService conventionService) {
         this.conventionService = conventionService;
     }
+
     @GetMapping("/getConvention/{id}") //handles GET requests
     public ResponseEntity<Convention> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id from the url into the Long variable
         Optional<Convention> conventionOptional = conventionService.getConvention(id);

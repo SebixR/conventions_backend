@@ -1,5 +1,6 @@
 package com.example.conventions_backend.dto;
 
+import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.entities.Convention;
 import com.example.conventions_backend.entities.ConventionStatus;
 import jakarta.persistence.EnumType;
