@@ -35,18 +35,11 @@ public class AuthenticationController {
 
     @PostMapping("loginUser")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        boolean emailExists = appUserService.checkIfEmailExists(request.getEmail());
-        if (emailExists) {
-            Optional<AppUser> appUser = appUserService.getAppUserByEmail(request.getEmail());
-            if (appUser.isPresent()) {
-                var userObj = appUser.get();
-                if (userObj.getPassword().equals(passwordEncoder.encode(request.getPassword()))) {
-                    return ResponseEntity.ok(service.login(request));
-                }
-            }
+        try {
+            return ResponseEntity.ok(service.login(request));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
     }
 
 }

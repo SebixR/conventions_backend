@@ -35,7 +35,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public AuthenticationResponse login(LoginRequest request) {
+    public AuthenticationResponse login(LoginRequest request) throws Exception{
         authenticationManager.authenticate( // checks if the username and password are correct, otherwise throws an exception
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(), request.getPassword()
