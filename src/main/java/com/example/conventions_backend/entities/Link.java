@@ -17,7 +17,8 @@ public class Link {
     @GeneratedValue
     private Long id;
 
-    private String link;
+    private String address;
+    private String name;
 
     @ManyToOne
     private Convention convention;

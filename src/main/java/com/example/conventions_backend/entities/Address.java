@@ -20,6 +20,6 @@ public class Address {
     @Column(nullable = true)
     private String address2;
 
-    @ManyToOne
+    @OneToOne
     private Convention convention;
 }

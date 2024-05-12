@@ -1,6 +1,5 @@
 package com.example.conventions_backend.services;
 
-import com.example.conventions_backend.dto.TagDto;
 import com.example.conventions_backend.entities.Tag;
 import com.example.conventions_backend.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;

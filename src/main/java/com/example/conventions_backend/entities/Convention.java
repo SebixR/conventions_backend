@@ -29,8 +29,8 @@ public class Convention {
     private AppUser user;
     @OneToMany(mappedBy = "convention")
     private List<Day> days;
-    @OneToMany(mappedBy = "convention")
-    private List<Address> addresses;
+    @OneToOne(mappedBy = "convention", cascade = CascadeType.ALL)
+    private Address address;
     @OneToMany(mappedBy = "convention")
     private List<TicketPrice> ticketPrices;
     @OneToMany(mappedBy = "convention")
