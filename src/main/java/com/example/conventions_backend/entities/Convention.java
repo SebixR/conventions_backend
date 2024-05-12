@@ -35,7 +35,12 @@ public class Convention {
     private List<TicketPrice> ticketPrices;
     @OneToMany(mappedBy = "convention")
     private List<Link> links;
-    @OneToMany(mappedBy = "convention")
+    @ManyToMany
+    @JoinTable(
+            name = "convention_tag",
+            joinColumns = @JoinColumn(name = "convention_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
     @OneToMany(mappedBy = "convention")
     private List<Photo> photos;

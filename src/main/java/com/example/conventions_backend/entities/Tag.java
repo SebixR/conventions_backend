@@ -1,12 +1,11 @@
 package com.example.conventions_backend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -19,6 +18,6 @@ public class Tag {
 
     private String tag;
 
-    @ManyToOne
-    private Convention convention;
+    @ManyToMany(mappedBy = "tags")
+    private List<Convention> conventions;
 }

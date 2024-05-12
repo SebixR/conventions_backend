@@ -1,18 +1,14 @@
 package com.example.conventions_backend.controllers;
 
-import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.services.AppUserService;
 import com.example.conventions_backend.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,7 +17,6 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
     private final AppUserService appUserService;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("signupUser")
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
