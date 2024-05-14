@@ -28,8 +28,8 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Convention> conventions;
+//    @OneToMany(mappedBy = "user")
+//    private List<Convention> conventions;
 
 
     @Override

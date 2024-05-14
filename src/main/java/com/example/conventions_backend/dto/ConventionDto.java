@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 public class ConventionDto {
+    private Long id;
     private Long userId;
     private String eventName;
     private String logo;
@@ -43,15 +44,15 @@ public class ConventionDto {
         conventionDto.setCountry(convention.getAddress().getCountry());
         conventionDto.setAddress1(convention.getAddress().getAddress1());
         conventionDto.setAddress2(convention.getAddress().getAddress2());
-        conventionDto.setTickets(convention.getTicketPrices());
-        conventionDto.setLinks(convention.getLinks());
+        //conventionDto.setTickets(convention.getTicketPrices());
+        //conventionDto.setLinks(convention.getLinks());
         conventionDto.setDescription(convention.getDescription());
         List<String> tags = new ArrayList<>();
         for (Tag tag : convention.getTags()) {
             tags.add(tag.getTag());
         }
         conventionDto.setSelectedTags(tags);
-        conventionDto.setPhotos(convention.getPhotos());
+        //conventionDto.setPhotos(convention.getPhotos());
         conventionDto.setConventionStatus(convention.getConventionStatus());
 
         return conventionDto;

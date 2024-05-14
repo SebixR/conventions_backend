@@ -2,6 +2,7 @@ package com.example.conventions_backend.services;
 
 import com.example.conventions_backend.entities.Convention;
 import com.example.conventions_backend.repositories.ConventionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class ConventionService {
 
     public Convention saveConvention(Convention convention) {
         return conventionRepository.save(convention);
+    }
+
+    public List<Convention> getAllConventions() {
+        return conventionRepository.findAll();
     }
 
 }

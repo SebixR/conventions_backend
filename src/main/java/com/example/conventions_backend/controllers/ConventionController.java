@@ -3,6 +3,7 @@ package com.example.conventions_backend.controllers;
 import com.example.conventions_backend.dto.ConventionDto;
 import com.example.conventions_backend.entities.*;
 import com.example.conventions_backend.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class ConventionController {
     private final PhotoService photoService;
     private final TagService tagService;
 
+    @Autowired
     public ConventionController(ConventionService conventionService, AppUserService appUserService,
                                 TicketPriceService ticketPriceService, LinkService linkService,
                                 PhotoService photoService, TagService tagService) {
@@ -39,6 +41,23 @@ public class ConventionController {
             return ResponseEntity.ok(conventionOptional.get());
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("public/getAllConventions")
+    public ResponseEntity<List<ConventionDto>> getAllConventions() {
+        List<Convention> conventions = conventionService.getAllConventions();
+
+        List<ConventionDto> conventionDtos = new ArrayList<>();
+        for (Convention convention : conventions) {
+            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
+            conventionDto.setId(convention.getId());
+            conventionDtos.add(conventionDto);
+        }
+        if (conventions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(conventionDtos);
         }
     }
 
@@ -91,7 +110,7 @@ public class ConventionController {
         return ResponseEntity.ok(savedConventionDto);
     }
 
-    private Convention fromConventionDto(ConventionDto conventionDto) { //skips all the relationships
+    private Convention fromConventionDto(ConventionDto conventionDto) { //skips all the relationships, as well as the id field (because there is no id yet, but we need it for get requests)
         Convention convention = new Convention();
         convention.setName(conventionDto.getEventName());
         convention.setStartDate(LocalDate.parse(conventionDto.getSelectedStartDate()));

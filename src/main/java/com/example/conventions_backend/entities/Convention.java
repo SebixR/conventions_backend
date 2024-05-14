@@ -27,21 +27,21 @@ public class Convention {
 
     @ManyToOne
     private AppUser user;
-    @OneToMany(mappedBy = "convention")
-    private List<Day> days;
+//    @OneToMany(mappedBy = "convention")
+//    private List<Day> days;
     @OneToOne(mappedBy = "convention", cascade = CascadeType.ALL)
     private Address address;
-    @OneToMany(mappedBy = "convention")
-    private List<TicketPrice> ticketPrices;
-    @OneToMany(mappedBy = "convention")
-    private List<Link> links;
-    @ManyToMany
+//    @OneToMany(mappedBy = "convention", fetch = FetchType.EAGER)
+//    private List<TicketPrice> ticketPrices;
+//    @OneToMany(mappedBy = "convention")
+//    private List<Link> links;
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "convention_tag",
             joinColumns = @JoinColumn(name = "convention_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
-    @OneToMany(mappedBy = "convention")
-    private List<Photo> photos;
+//    @OneToMany(mappedBy = "convention")
+//    private List<Photo> photos;
 }
