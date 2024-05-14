@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,13 +19,17 @@ public class ConventionController {
     private final TicketPriceService ticketPriceService;
     private final LinkService linkService;
     private final PhotoService photoService;
+    private final TagService tagService;
 
-    public ConventionController(ConventionService conventionService, AppUserService appUserService, TicketPriceService ticketPriceService, LinkService linkService, PhotoService photoService) {
+    public ConventionController(ConventionService conventionService, AppUserService appUserService,
+                                TicketPriceService ticketPriceService, LinkService linkService,
+                                PhotoService photoService, TagService tagService) {
         this.conventionService = conventionService;
         this.appUserService = appUserService;
         this.ticketPriceService = ticketPriceService;
         this.linkService = linkService;
         this.photoService = photoService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/getConvention/{id}") //handles GET requests
@@ -49,6 +55,13 @@ public class ConventionController {
         AppUser appUser = appUserService.getAppUserById(conventionDto.getUserId());
         convention.setUser(appUser);
 
+        List<Tag> tags = new ArrayList<>();
+        for (String tagString : conventionDto.getSelectedTags()) {
+            Tag tag = tagService.getTagByTag(tagString);
+            tags.add(tag);
+        }
+        convention.setTags(tags);
+
         Convention savedConvention = conventionService.saveConvention(convention);
 
         for (TicketPrice ticket : conventionDto.getTickets()) {
@@ -67,6 +80,8 @@ public class ConventionController {
             linkService.saveLink(newLink);
         }
 
+
+
         for (Photo photo : conventionDto.getPhotos()) {
             Photo newPhoto = new Photo();
             newPhoto.setFileName(photo.getFileName());
@@ -79,17 +94,13 @@ public class ConventionController {
         return ResponseEntity.ok(savedConventionDto);
     }
 
-    private Convention fromConventionDto(ConventionDto conventionDto) {
+    private Convention fromConventionDto(ConventionDto conventionDto) { //skips all the relationships
         Convention convention = new Convention();
         convention.setName(conventionDto.getEventName());
         convention.setLogo(conventionDto.getLogo());
         convention.setStartDate(LocalDate.parse(conventionDto.getSelectedStartDate()));
         convention.setEndDate(LocalDate.parse(conventionDto.getSelectedEndDate()));
-        convention.setTicketPrices(conventionDto.getTickets());
-        convention.setLinks(conventionDto.getLinks());
         convention.setDescription(conventionDto.getDescription());
-        convention.setTags(conventionDto.getTags());
-        convention.setPhotos(conventionDto.getPhotos());
         convention.setConventionStatus(conventionDto.getConventionStatus());
 
         return convention;

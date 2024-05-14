@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,7 +27,7 @@ public class ConventionDto {
     private List<TicketPrice> tickets;
     private List<Link> links;
     private String description;
-    private List<Tag> tags;
+    private List<String> selectedTags;
     private List<Photo> photos;
     @Enumerated(EnumType.STRING)
     private ConventionStatus conventionStatus;
@@ -45,7 +46,11 @@ public class ConventionDto {
         conventionDto.setTickets(convention.getTicketPrices());
         conventionDto.setLinks(convention.getLinks());
         conventionDto.setDescription(convention.getDescription());
-        conventionDto.setTags(convention.getTags());
+        List<String> tags = new ArrayList<>();
+        for (Tag tag : convention.getTags()) {
+            tags.add(tag.getTag());
+        }
+        conventionDto.setSelectedTags(tags);
         conventionDto.setPhotos(convention.getPhotos());
 
         int startDateComparison = LocalDate.parse(conventionDto.getSelectedStartDate()).compareTo(LocalDate.now());
