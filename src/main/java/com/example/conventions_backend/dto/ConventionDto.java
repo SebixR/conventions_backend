@@ -52,19 +52,7 @@ public class ConventionDto {
         }
         conventionDto.setSelectedTags(tags);
         conventionDto.setPhotos(convention.getPhotos());
-
-        int startDateComparison = LocalDate.parse(conventionDto.getSelectedStartDate()).compareTo(LocalDate.now());
-        int endDateComparison = LocalDate.parse(conventionDto.getSelectedEndDate()).compareTo(LocalDate.now());
-        if ((startDateComparison == 0 || startDateComparison < 0) //start date is today or passed
-                && (endDateComparison == 0 || endDateComparison > 0)) { //end date is today or upcoming
-            conventionDto.setConventionStatus(ConventionStatus.ONGOING);
-        }
-        else if (startDateComparison > 0) { //start date is upcoming
-            conventionDto.setConventionStatus(ConventionStatus.UPCOMING);
-        }
-        else {
-            conventionDto.setConventionStatus(ConventionStatus.OVER);
-        }
+        conventionDto.setConventionStatus(convention.getConventionStatus());
 
         return conventionDto;
     }

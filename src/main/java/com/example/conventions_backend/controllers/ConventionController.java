@@ -47,7 +47,6 @@ public class ConventionController {
 
         Convention convention = fromConventionDto(conventionDto);
 
-        //tags are null, but right now it's an issue with the front end
         Address address = addressFromConventionDto(conventionDto);
         convention.setAddress(address);
         address.setConvention(convention);
@@ -80,8 +79,6 @@ public class ConventionController {
             linkService.saveLink(newLink);
         }
 
-
-
         for (Photo photo : conventionDto.getPhotos()) {
             Photo newPhoto = new Photo();
             newPhoto.setFileName(photo.getFileName());
@@ -97,10 +94,24 @@ public class ConventionController {
     private Convention fromConventionDto(ConventionDto conventionDto) { //skips all the relationships
         Convention convention = new Convention();
         convention.setName(conventionDto.getEventName());
-        convention.setLogo(conventionDto.getLogo());
         convention.setStartDate(LocalDate.parse(conventionDto.getSelectedStartDate()));
         convention.setEndDate(LocalDate.parse(conventionDto.getSelectedEndDate()));
         convention.setDescription(conventionDto.getDescription());
+        convention.setLogo(conventionDto.getLogo());
+
+        int startDateComparison = LocalDate.parse(conventionDto.getSelectedStartDate()).compareTo(LocalDate.now());
+        int endDateComparison = LocalDate.parse(conventionDto.getSelectedEndDate()).compareTo(LocalDate.now());
+        if ((startDateComparison == 0 || startDateComparison < 0) //start date is today or passed
+                && (endDateComparison == 0 || endDateComparison > 0)) { //end date is today or upcoming
+            conventionDto.setConventionStatus(ConventionStatus.ONGOING);
+        }
+        else if (startDateComparison > 0) { //start date is upcoming
+            conventionDto.setConventionStatus(ConventionStatus.UPCOMING);
+        }
+        else {
+            conventionDto.setConventionStatus(ConventionStatus.OVER);
+        }
+
         convention.setConventionStatus(conventionDto.getConventionStatus());
 
         return convention;
