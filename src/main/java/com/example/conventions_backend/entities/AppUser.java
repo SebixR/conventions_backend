@@ -28,9 +28,6 @@ public class AppUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Convention> conventions;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { //list of roles

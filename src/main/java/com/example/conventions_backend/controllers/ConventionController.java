@@ -34,11 +34,19 @@ public class ConventionController {
         this.tagService = tagService;
     }
 
-    @GetMapping("/getConvention/{id}") //handles GET requests
-    public ResponseEntity<Convention> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id from the url into the Long variable
+    @GetMapping("public/getConvention/{id}") //handles GET requests
+    public ResponseEntity<ConventionDto> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id from the url into the Long variable
         Optional<Convention> conventionOptional = conventionService.getConvention(id);
+
         if (conventionOptional.isPresent()) {
-            return ResponseEntity.ok(conventionOptional.get());
+            ConventionDto conventionDto = ConventionDto.fromConvention(conventionOptional.get());
+            conventionDto.setId(conventionOptional.get().getId());
+
+            conventionDto.setLinks(linkService.getLinksByConventionId(id));
+            conventionDto.setPhotos(photoService.getPhotosByConventionId(id));
+            conventionDto.setTickets(ticketPriceService.getTicketPricesByConventionId(id));
+
+            return ResponseEntity.ok(conventionDto);
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -5,6 +5,8 @@ import com.example.conventions_backend.repositories.LinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LinkService {
 
@@ -17,5 +19,9 @@ public class LinkService {
 
     public Link saveLink(Link link) {
         return linkRepository.save(link);
+    }
+
+    public List<Link> getLinksByConventionId(Long id) {
+        return linkRepository.findAllByConventionId(id);
     }
 }

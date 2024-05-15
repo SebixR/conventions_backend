@@ -27,14 +27,8 @@ public class Convention {
 
     @ManyToOne
     private AppUser user;
-//    @OneToMany(mappedBy = "convention")
-//    private List<Day> days;
     @OneToOne(mappedBy = "convention", cascade = CascadeType.ALL)
     private Address address;
-//    @OneToMany(mappedBy = "convention", fetch = FetchType.EAGER)
-//    private List<TicketPrice> ticketPrices;
-//    @OneToMany(mappedBy = "convention")
-//    private List<Link> links;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "convention_tag",
@@ -42,6 +36,4 @@ public class Convention {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
-//    @OneToMany(mappedBy = "convention")
-//    private List<Photo> photos;
 }

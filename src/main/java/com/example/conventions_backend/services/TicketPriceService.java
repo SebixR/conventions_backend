@@ -5,6 +5,8 @@ import com.example.conventions_backend.repositories.TicketPriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketPriceService {
 
@@ -17,5 +19,9 @@ public class TicketPriceService {
 
     public TicketPrice saveTicketPrice(TicketPrice ticketPrice) {
         return ticketPriceRepository.save(ticketPrice);
+    }
+
+    public List<TicketPrice> getTicketPricesByConventionId(Long id) {
+        return ticketPriceRepository.getTicketPricesByConventionId(id);
     }
 }

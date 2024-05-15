@@ -1,5 +1,6 @@
 package com.example.conventions_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class TicketPrice {
     private String description;
 
     @ManyToOne
+    @JsonIgnore
     private Convention convention;
 }

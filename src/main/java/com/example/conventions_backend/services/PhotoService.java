@@ -4,6 +4,8 @@ import com.example.conventions_backend.entities.Photo;
 import com.example.conventions_backend.repositories.PhotoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PhotoService {
 
@@ -15,5 +17,9 @@ public class PhotoService {
 
     public Photo savePhoto(Photo photo) {
         return photoRepository.save(photo);
+    }
+
+    public List<Photo> getPhotosByConventionId(Long id) {
+        return photoRepository.findAllByConventionId(id);
     }
 }

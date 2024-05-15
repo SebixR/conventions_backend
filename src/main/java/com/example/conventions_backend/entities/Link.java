@@ -1,5 +1,6 @@
 package com.example.conventions_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,5 +22,6 @@ public class Link {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     private Convention convention;
 }

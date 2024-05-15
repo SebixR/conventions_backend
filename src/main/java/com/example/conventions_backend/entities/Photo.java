@@ -1,9 +1,7 @@
 package com.example.conventions_backend.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,5 +18,6 @@ public class Photo {
     private String fileName;
 
     @ManyToOne
+    @JsonIgnore
     private Convention convention;
 }
