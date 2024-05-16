@@ -1,8 +1,9 @@
 package com.example.conventions_backend.services;
 
+import com.example.conventions_backend.dto.ConventionSpecifications;
+import com.example.conventions_backend.dto.FilterRequestDto;
 import com.example.conventions_backend.entities.Convention;
 import com.example.conventions_backend.repositories.ConventionRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +24,16 @@ public class ConventionService {
         return conventionRepository.findById(id);
     }
 
-    public List<Convention> getConventionByName(String name) {
-        return conventionRepository.getConventionByName(name);
-    }
-
     public Convention saveConvention(Convention convention) {
         return conventionRepository.save(convention);
     }
 
     public List<Convention> getAllConventions() {
         return conventionRepository.findAll();
+    }
+
+    public List<Convention> getFilteredConventions(FilterRequestDto filterRequestDto) {
+        return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto));
     }
 
 }

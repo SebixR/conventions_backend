@@ -1,6 +1,7 @@
 package com.example.conventions_backend.controllers;
 
 import com.example.conventions_backend.dto.ConventionDto;
+import com.example.conventions_backend.dto.FilterRequestDto;
 import com.example.conventions_backend.entities.*;
 import com.example.conventions_backend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,23 @@ public class ConventionController {
     @GetMapping("public/getAllConventions")
     public ResponseEntity<List<ConventionDto>> getAllConventions() {
         List<Convention> conventions = conventionService.getAllConventions();
+
+        List<ConventionDto> conventionDtos = new ArrayList<>();
+        for (Convention convention : conventions) {
+            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
+            conventionDto.setId(convention.getId());
+            conventionDtos.add(conventionDto);
+        }
+        if (conventions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(conventionDtos);
+        }
+    }
+
+    @PostMapping("public/filterConventions")
+    public ResponseEntity<List<ConventionDto>> getFilteredConventions(@RequestBody FilterRequestDto filterRequestDto) {
+        List<Convention> conventions = conventionService.getFilteredConventions(filterRequestDto);
 
         List<ConventionDto> conventionDtos = new ArrayList<>();
         for (Convention convention : conventions) {

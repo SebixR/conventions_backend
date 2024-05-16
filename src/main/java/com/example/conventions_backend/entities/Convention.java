@@ -20,6 +20,7 @@ public class Convention {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
+    @Column(length = 801)
     private String description;
     private String logo;
     @Enumerated(EnumType.STRING)
