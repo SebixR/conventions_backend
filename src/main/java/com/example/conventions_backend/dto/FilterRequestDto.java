@@ -14,5 +14,5 @@ public class FilterRequestDto {
     private String city;
     private String date;
     private List<String> selectedTags;
-    private List<String> selectedStatusValues;
+    private List<String> selectedStatuses;
 }

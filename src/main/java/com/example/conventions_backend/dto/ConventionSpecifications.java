@@ -39,9 +39,9 @@ public class ConventionSpecifications {
                 predicates.add(tagJoin.get("tag").in(filterRequestDto.getSelectedTags()));
             }
 
-            if (filterRequestDto.getSelectedStatusValues() != null && !filterRequestDto.getSelectedStatusValues().isEmpty()) {
+            if (filterRequestDto.getSelectedStatuses() != null && !filterRequestDto.getSelectedStatuses().isEmpty()) {
                 Expression<String> statusExpression = root.get("conventionStatus"); //just to get to the status, without comparing it with an array while adding
-                predicates.add(statusExpression.in(filterRequestDto.getSelectedStatusValues()));
+                predicates.add(statusExpression.in(filterRequestDto.getSelectedStatuses()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
