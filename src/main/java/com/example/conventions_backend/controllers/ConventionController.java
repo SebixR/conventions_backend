@@ -104,6 +104,24 @@ public class ConventionController {
         }
     }
 
+    @DeleteMapping("auth/deleteConvention/{id}")
+    public void deleteConvention(@PathVariable("id") Long id) {
+        Optional<Convention> conventionOptional = conventionService.getConvention(id);
+        if (conventionOptional.isEmpty()) return;
+
+        List<Photo> photos = photoService.getPhotosByConventionId(id);
+        for(Photo photo : photos) {
+            photoService.deletePhoto(photo.getId());
+        }
+
+        List<TicketPrice> ticketPrices = ticketPriceService.getTicketPricesByConventionId(id);
+        for(TicketPrice ticketPrice : ticketPrices) {
+            ticketPriceService.deleteTicketPrice(ticketPrice.getId());
+        }
+
+        conventionService.deleteConvention(id);
+    }
+
     @PostMapping("auth/addConvention")
     public ResponseEntity<ConventionDto> addConvention(@RequestBody ConventionDto conventionDto) {
 

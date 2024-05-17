@@ -18,6 +18,9 @@ public class PhotoService {
     public Photo savePhoto(Photo photo) {
         return photoRepository.save(photo);
     }
+    public void deletePhoto(Long id) {
+        photoRepository.deleteById(id);
+    }
 
     public List<Photo> getPhotosByConventionId(Long id) {
         return photoRepository.findAllByConventionId(id);

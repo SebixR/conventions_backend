@@ -21,6 +21,10 @@ public class TicketPriceService {
         return ticketPriceRepository.save(ticketPrice);
     }
 
+    public void deleteTicketPrice(Long id) {
+        ticketPriceRepository.deleteById(id);
+    }
+
     public List<TicketPrice> getTicketPricesByConventionId(Long id) {
         return ticketPriceRepository.getTicketPricesByConventionId(id);
     }

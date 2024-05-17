@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -41,5 +40,25 @@ public class AppUserController {
 
             return ResponseEntity.ok(responseAppUser);
         }
+    }
+
+    @PostMapping("/updateAppUser")
+    public ResponseEntity<AppUser> updateAppUser(@RequestBody AppUser updatedAppUser) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        Optional<AppUser> userOptional = appUserService.getAppUserByEmail(userEmail);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        AppUser appUser = userOptional.get();
+        appUser.setFirstName(updatedAppUser.getFirstName());
+        appUser.setLastName(updatedAppUser.getLastName());
+        appUser.setEmail(updatedAppUser.getEmail());
+
+        AppUser updatedAppUserData = appUserService.saveUser(appUser);
+
+        return ResponseEntity.ok(updatedAppUserData);
     }
 }

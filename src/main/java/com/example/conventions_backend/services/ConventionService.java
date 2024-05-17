@@ -40,4 +40,8 @@ public class ConventionService {
         return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto));
     }
 
+    public void deleteConvention(Long id) {
+        conventionRepository.deleteById(id);
+    }
+
 }
