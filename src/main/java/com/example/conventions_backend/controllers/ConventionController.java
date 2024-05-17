@@ -70,6 +70,23 @@ public class ConventionController {
         }
     }
 
+    @GetMapping("auth/getConventionsByUser/{id}")
+    public ResponseEntity<List<ConventionDto>> getConventionsByUser(@PathVariable("id") Long id) {
+        List<Convention> conventions = conventionService.getConventionsByUser(id);
+
+        List<ConventionDto> conventionDtos = new ArrayList<>();
+        for (Convention convention : conventions) {
+            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
+            conventionDto.setId(convention.getId());
+            conventionDtos.add(conventionDto);
+        }
+        if (conventions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(conventionDtos);
+        }
+    }
+
     @PostMapping("public/filterConventions")
     public ResponseEntity<List<ConventionDto>> getFilteredConventions(@RequestBody FilterRequestDto filterRequestDto) {
         List<Convention> conventions = conventionService.getFilteredConventions(filterRequestDto);

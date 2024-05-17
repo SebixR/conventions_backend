@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ConventionRepository extends JpaRepository<Convention, Long>, JpaSpecificationExecutor<Convention> {
 
-    List<Convention> getConventionByName(String name);
+    List<Convention> findAllByUserId(Long id);
 }

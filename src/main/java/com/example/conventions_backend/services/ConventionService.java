@@ -32,6 +32,10 @@ public class ConventionService {
         return conventionRepository.findAll();
     }
 
+    public List<Convention> getConventionsByUser(Long id) {
+        return conventionRepository.findAllByUserId(id);
+    }
+
     public List<Convention> getFilteredConventions(FilterRequestDto filterRequestDto) {
         return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto));
     }
