@@ -1,5 +1,6 @@
 package com.example.conventions_backend.controllers;
 
+import com.example.conventions_backend.dto.PasswordChangeDto;
 import com.example.conventions_backend.services.AppUserService;
 import com.example.conventions_backend.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;

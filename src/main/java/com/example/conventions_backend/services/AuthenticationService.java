@@ -4,6 +4,7 @@ import com.example.conventions_backend.config.JwtService;
 import com.example.conventions_backend.controllers.AuthenticationResponse;
 import com.example.conventions_backend.controllers.LoginRequest;
 import com.example.conventions_backend.controllers.SignupRequest;
+import com.example.conventions_backend.dto.PasswordChangeDto;
 import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.entities.UserRole;
 import com.example.conventions_backend.repositories.AppUserRepository;

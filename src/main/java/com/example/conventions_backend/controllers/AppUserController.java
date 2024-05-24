@@ -1,8 +1,11 @@
 package com.example.conventions_backend.controllers;
 
+import com.example.conventions_backend.dto.PasswordChangeDto;
 import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.services.AppUserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,9 +17,13 @@ import java.util.Optional;
 public class AppUserController {
 
     private final AppUserService appUserService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public AppUserController(AppUserService appUserService) {
+    public AppUserController(AppUserService appUserService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.appUserService = appUserService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping("/getAppUser")
@@ -61,4 +68,37 @@ public class AppUserController {
 
         return ResponseEntity.ok(updatedAppUserData);
     }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<AppUser> updateAppUserPassword(@RequestBody PasswordChangeDto passwordChangeDto)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        Optional<AppUser> userOptional = appUserService.getAppUserByEmail(userEmail);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        AppUser appUser = userOptional.get();
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            passwordChangeDto.getEmail(), passwordChangeDto.getOldPassword()
+                    )
+            );
+        } catch (Exception e)
+        {
+            return ResponseEntity.notFound().build();
+        }
+
+
+        appUser.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
+
+        AppUser updatedAppUserData = appUserService.saveUser(appUser);
+
+        return ResponseEntity.ok(updatedAppUserData);
+    }
+
 }
