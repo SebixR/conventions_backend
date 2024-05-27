@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ConventionDto {
 
     public static ConventionDto fromConvention(Convention convention) {
         ConventionDto conventionDto = new ConventionDto();
+        conventionDto.setId(convention.getId());
         conventionDto.setUserId(convention.getUser().getId());
         conventionDto.setEventName(convention.getName());
         conventionDto.setLogo(convention.getLogo());

@@ -112,6 +112,7 @@ public class ConventionController {
         List<Photo> photos = photoService.getPhotosByConventionId(id);
         for(Photo photo : photos) {
             photoService.deletePhoto(photo.getId());
+            //TODO Delete the actual files
         }
 
         List<TicketPrice> ticketPrices = ticketPriceService.getTicketPricesByConventionId(id);
@@ -159,12 +160,7 @@ public class ConventionController {
             linkService.saveLink(newLink);
         }
 
-        for (Photo photo : conventionDto.getPhotos()) {
-            Photo newPhoto = new Photo();
-            newPhoto.setFileName(photo.getFileName());
-            newPhoto.setConvention(convention);
-            photoService.savePhoto(newPhoto);
-        }
+        // Photos now handled by the PhotoController
 
         ConventionDto savedConventionDto = ConventionDto.fromConvention(savedConvention);
 

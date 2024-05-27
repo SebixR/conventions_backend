@@ -1,14 +1,30 @@
 package com.example.conventions_backend.services;
 
+import com.example.conventions_backend.entities.Convention;
 import com.example.conventions_backend.entities.Photo;
 import com.example.conventions_backend.repositories.PhotoRepository;
-import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PhotoService {
-
+    @Value("${image.upload.dir}")
+    private String imageUploadDir;
     private final PhotoRepository photoRepository;
 
     public PhotoService(PhotoRepository photoRepository) {
@@ -18,6 +34,35 @@ public class PhotoService {
     public Photo savePhoto(Photo photo) {
         return photoRepository.save(photo);
     }
+
+    public Photo storePhoto(MultipartFile file, Convention convention) throws IOException {
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        Path filePath = Paths.get(imageUploadDir, filename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        Photo photo = new Photo();
+        photo.setFileName(filename);
+        photo.setConvention(convention);
+        return photoRepository.save(photo);
+    }
+
+    public Resource loadPhoto(Long id) throws MalformedURLException {
+        Optional<Photo> photoOptional = photoRepository.findById(id);
+        if (photoOptional.isEmpty()) {
+            throw new RuntimeException("Could not read file");
+        }
+
+        Photo photo = photoOptional.get();
+        Path filePath = Paths.get(imageUploadDir, photo.getFileName());
+        Resource resource = new UrlResource(filePath.toUri());
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("Could not read file: " + photo.getFileName());
+        }
+    }
+
     public void deletePhoto(Long id) {
         photoRepository.deleteById(id);
     }
