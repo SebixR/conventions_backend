@@ -2,6 +2,7 @@ package com.example.conventions_backend.services;
 
 import com.example.conventions_backend.entities.Convention;
 import com.example.conventions_backend.entities.Photo;
+import com.example.conventions_backend.repositories.ConventionRepository;
 import com.example.conventions_backend.repositories.PhotoRepository;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -25,10 +26,14 @@ import java.util.UUID;
 public class PhotoService {
     @Value("${image.upload.dir}")
     private String imageUploadDir;
+    @Value("${logo.upload.dir}")
+    private String logoUploadDir;
     private final PhotoRepository photoRepository;
+    private final ConventionRepository conventionRepository;
 
-    public PhotoService(PhotoRepository photoRepository) {
+    public PhotoService(PhotoRepository photoRepository, ConventionRepository conventionRepository) {
         this.photoRepository = photoRepository;
+        this.conventionRepository = conventionRepository;
     }
 
     public Photo savePhoto(Photo photo) {
@@ -60,6 +65,31 @@ public class PhotoService {
             return resource;
         } else {
             throw new RuntimeException("Could not read file: " + photo.getFileName());
+        }
+    }
+
+    public String storeLogo(MultipartFile file) throws IOException {
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        Path filePath = Paths.get(logoUploadDir, filename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return filename;
+    }
+
+    public Resource loadLogo(Long id) throws MalformedURLException {
+        Optional<Convention> conventionOptional = conventionRepository.findById(id);
+        if (conventionOptional.isEmpty()) {
+            throw new RuntimeException("Could not read file");
+        }
+
+        Convention convention = conventionOptional.get();
+        Path filePath = Paths.get(logoUploadDir, convention.getLogo());
+        Resource resource = new UrlResource(filePath.toUri());
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("Could not read file: " + convention.getLogo());
         }
     }
 

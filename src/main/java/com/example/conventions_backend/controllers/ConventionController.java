@@ -109,6 +109,8 @@ public class ConventionController {
         Optional<Convention> conventionOptional = conventionService.getConvention(id);
         if (conventionOptional.isEmpty()) return;
 
+        //TODO delete the logo file
+
         List<Photo> photos = photoService.getPhotosByConventionId(id);
         for(Photo photo : photos) {
             photoService.deletePhoto(photo.getId());
@@ -118,6 +120,11 @@ public class ConventionController {
         List<TicketPrice> ticketPrices = ticketPriceService.getTicketPricesByConventionId(id);
         for(TicketPrice ticketPrice : ticketPrices) {
             ticketPriceService.deleteTicketPrice(ticketPrice.getId());
+        }
+
+        List<Link> links = linkService.getLinksByConventionId(id);
+        for(Link link : links) {
+            linkService.deleteLink(link.getId());
         }
 
         conventionService.deleteConvention(id);

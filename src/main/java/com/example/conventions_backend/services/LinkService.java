@@ -21,6 +21,10 @@ public class LinkService {
         return linkRepository.save(link);
     }
 
+    public void deleteLink(Long id) {
+        linkRepository.deleteById(id);
+    }
+
     public List<Link> getLinksByConventionId(Long id) {
         return linkRepository.findAllByConventionId(id);
     }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -44,10 +45,43 @@ public class PhotoController {
         }
     }
 
-    @GetMapping(value = "auth/loadPhoto/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "public/loadPhoto/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Resource> loadPhoto(@PathVariable Long id) {
         try {
             Resource resource = photoService.loadPhoto(id);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("auth/uploadLogo")
+    public ResponseEntity<Convention> uploadLogo(@RequestParam("file")MultipartFile file, @RequestParam("conventionId") Long conventionId) {
+        try {
+            Optional<Convention> conventionOptional = conventionService.getConvention(conventionId);
+            if (conventionOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+            String filename = photoService.storeLogo(file);
+
+            Convention convention = conventionOptional.get();
+            convention.setLogo(filename);
+            Convention savedConvention = conventionService.saveConvention(convention);
+
+            return ResponseEntity.ok(savedConvention);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping(value= "public/loadLogo/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Resource> loadLogo(@PathVariable Long id) {
+        try {
+            Resource resource = photoService.loadLogo(id);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
                     .body(resource);
