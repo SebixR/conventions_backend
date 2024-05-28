@@ -31,6 +31,7 @@ public class ConventionDto {
     private String description;
     private List<String> selectedTags;
     private List<Photo> photos;
+    private List<String> fetchedPhotoNames;
     @Enumerated(EnumType.STRING)
     private ConventionStatus conventionStatus;
 
@@ -46,15 +47,12 @@ public class ConventionDto {
         conventionDto.setCountry(convention.getAddress().getCountry());
         conventionDto.setAddress1(convention.getAddress().getAddress1());
         conventionDto.setAddress2(convention.getAddress().getAddress2());
-        //conventionDto.setTickets(convention.getTicketPrices());
-        //conventionDto.setLinks(convention.getLinks());
         conventionDto.setDescription(convention.getDescription());
         List<String> tags = new ArrayList<>();
         for (Tag tag : convention.getTags()) {
             tags.add(tag.getTag());
         }
         conventionDto.setSelectedTags(tags);
-        //conventionDto.setPhotos(convention.getPhotos());
         conventionDto.setConventionStatus(convention.getConventionStatus());
 
         return conventionDto;

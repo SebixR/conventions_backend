@@ -35,8 +35,8 @@ public class ConventionController {
         this.tagService = tagService;
     }
 
-    @GetMapping("public/getConvention/{id}") //handles GET requests
-    public ResponseEntity<ConventionDto> getConventionById(@PathVariable("id") Long id) { //@PathVariable puts the id from the url into the Long variable
+    @GetMapping("public/getConvention/{id}")
+    public ResponseEntity<ConventionDto> getConventionById(@PathVariable("id") Long id) {
         Optional<Convention> conventionOptional = conventionService.getConvention(id);
 
         if (conventionOptional.isPresent()) {
@@ -167,7 +167,13 @@ public class ConventionController {
             linkService.saveLink(newLink);
         }
 
-        // Photos now handled by the PhotoController
+        for (String filename : conventionDto.getFetchedPhotoNames()){
+            Photo photo = new Photo();
+            photo.setFileName(filename);
+            photo.setConvention(convention);
+            photoService.savePhoto(photo);
+        }
+        // New photos handled by the PhotoController
 
         ConventionDto savedConventionDto = ConventionDto.fromConvention(savedConvention);
 
@@ -176,6 +182,7 @@ public class ConventionController {
 
     private Convention fromConventionDto(ConventionDto conventionDto) { //skips all the relationships, as well as the id field (because there is no id yet, but we need it for get requests)
         Convention convention = new Convention();
+
         convention.setName(conventionDto.getEventName());
         convention.setStartDate(LocalDate.parse(conventionDto.getSelectedStartDate()));
         convention.setEndDate(LocalDate.parse(conventionDto.getSelectedEndDate()));
@@ -194,6 +201,7 @@ public class ConventionController {
         else {
             conventionDto.setConventionStatus(ConventionStatus.OVER);
         }
+        //TODO Status is never updated
 
         convention.setConventionStatus(conventionDto.getConventionStatus());
 
