@@ -3,6 +3,7 @@ package com.example.conventions_backend.controllers;
 import com.example.conventions_backend.dto.PasswordChangeDto;
 import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.services.AppUserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -46,6 +48,16 @@ public class AppUserController {
             responseAppUser.setLastName(appUser.getLastName());
 
             return ResponseEntity.ok(responseAppUser);
+        }
+    }
+
+    @GetMapping("auth/getAppUserById/{id}")
+    public ResponseEntity<AppUser> getAppUserById(@PathVariable("id") Long id) {
+        try {
+            AppUser appUser = appUserService.getAppUserById(id);
+            return ResponseEntity.ok(appUser);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
