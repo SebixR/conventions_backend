@@ -3,7 +3,9 @@ package com.example.conventions_backend.services;
 import com.example.conventions_backend.dto.ConventionSpecifications;
 import com.example.conventions_backend.dto.FilterRequestDto;
 import com.example.conventions_backend.entities.Convention;
+import com.example.conventions_backend.entities.ConventionStatus;
 import com.example.conventions_backend.repositories.ConventionRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,26 @@ public class ConventionService {
 
     public void deleteConvention(Long id) {
         conventionRepository.deleteById(id);
+    }
+
+    public Convention blockConvention(Long id) {
+        Optional<Convention> conventionOptional = conventionRepository.findById(id);
+        if (conventionOptional.isEmpty())
+            throw new EntityNotFoundException("Convention with id " + id + "wasn't found");
+
+        Convention convention = conventionOptional.get();
+        convention.setConventionStatus(ConventionStatus.BLOCKED);
+        return conventionRepository.save(convention);
+    }
+
+    public Convention unblockConvention(Long id, ConventionStatus status) {
+        Optional<Convention> conventionOptional = conventionRepository.findById(id);
+        if (conventionOptional.isEmpty())
+            throw new EntityNotFoundException("Convention with id " + id + "wasn't found");
+
+        Convention convention = conventionOptional.get();
+        convention.setConventionStatus(status);
+        return conventionRepository.save(convention);
     }
 
 }
