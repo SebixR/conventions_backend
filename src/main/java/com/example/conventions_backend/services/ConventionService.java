@@ -28,7 +28,7 @@ public class ConventionService {
     }
 
     public List<Convention> getAllConventions() {
-        return conventionRepository.findAll();
+        return conventionRepository.findAllByOrderByStatusAndStartDate();
     }
 
     public List<Convention> getConventionsByUser(Long id) {
