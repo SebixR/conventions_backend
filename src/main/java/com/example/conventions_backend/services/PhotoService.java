@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -91,6 +92,16 @@ public class PhotoService {
         } else {
             throw new RuntimeException("Could not read file: " + convention.getLogo());
         }
+    }
+
+    public void deleteLogoFile(String filename) throws IOException {
+        Path filePath = Paths.get(logoUploadDir).resolve(filename);
+        Files.deleteIfExists(filePath);
+    }
+
+    public void deletePhotoFile(String filename) throws IOException {
+        Path filePath = Paths.get(imageUploadDir).resolve(filename);
+        Files.deleteIfExists(filePath);
     }
 
     public void deletePhoto(Long id) {

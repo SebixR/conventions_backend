@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,17 +105,29 @@ public class ConventionController {
         }
     }
 
-    @DeleteMapping("auth/deleteConvention/{id}")
-    public void deleteConvention(@PathVariable("id") Long id) {
+    @PostMapping("auth/deleteConvention")
+    public void deleteConvention(@RequestParam("id") Long id, @RequestParam("photos") List<String> photosToSkip) {
         Optional<Convention> conventionOptional = conventionService.getConvention(id);
         if (conventionOptional.isEmpty()) return;
 
-        //TODO delete the logo file
+        if (!photosToSkip.contains(conventionOptional.get().getLogo())) {
+            try {
+                photoService.deleteLogoFile(conventionOptional.get().getLogo());
+            } catch (IOException e) {
+                System.out.println("Failed to delete the logo file");
+            }
+        }
 
         List<Photo> photos = photoService.getPhotosByConventionId(id);
         for(Photo photo : photos) {
+            if (!photosToSkip.contains(photo.getFileName())) {
+                try {
+                    photoService.deletePhotoFile(photo.getFileName());
+                } catch (IOException e) {
+                    System.out.println("Failed to delete photo: " + photo.getFileName());
+                }
+            }
             photoService.deletePhoto(photo.getId());
-            //TODO Delete the actual files
         }
 
         List<TicketPrice> ticketPrices = ticketPriceService.getTicketPricesByConventionId(id);
