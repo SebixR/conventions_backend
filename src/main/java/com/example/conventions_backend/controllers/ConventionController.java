@@ -191,6 +191,9 @@ public class ConventionController {
         }
         convention.setTags(tags);
 
+        if (appUser.getRole() == UserRole.BLOCKED)
+            convention.setConventionStatus(ConventionStatus.BLOCKED);
+
         Convention savedConvention = conventionService.saveConvention(convention);
 
         for (TicketPrice ticket : conventionDto.getTickets()) {
@@ -231,7 +234,9 @@ public class ConventionController {
         convention.setDescription(conventionDto.getDescription());
         convention.setLogo(conventionDto.getLogo());
 
-        conventionDto.setConventionStatus(chooseStatus(LocalDate.parse(conventionDto.getSelectedStartDate()), LocalDate.parse(conventionDto.getSelectedEndDate())));
+        conventionDto.setConventionStatus(chooseStatus(
+                LocalDate.parse(conventionDto.getSelectedStartDate()),
+                LocalDate.parse(conventionDto.getSelectedEndDate())));
         //TODO Status is never updated
 
         convention.setConventionStatus(conventionDto.getConventionStatus());
@@ -239,7 +244,7 @@ public class ConventionController {
         return convention;
     }
 
-    private ConventionStatus chooseStatus(LocalDate startDate, LocalDate endDate) {
+    public static ConventionStatus chooseStatus(LocalDate startDate, LocalDate endDate) {
         int startDateComparison = startDate.compareTo(LocalDate.now());
         int endDateComparison = endDate.compareTo(LocalDate.now());
         if ((startDateComparison == 0 || startDateComparison < 0) //start date is today or passed

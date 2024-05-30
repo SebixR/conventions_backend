@@ -1,6 +1,8 @@
 package com.example.conventions_backend.services;
 
 import com.example.conventions_backend.entities.AppUser;
+import com.example.conventions_backend.entities.Convention;
+import com.example.conventions_backend.entities.UserRole;
 import com.example.conventions_backend.repositories.AppUserRepository;
 
 import jakarta.transaction.Transactional;
@@ -30,6 +32,26 @@ public class AppUserService {
     }
 
     public AppUser saveUser(AppUser appUser) {
+        return appUserRepository.save(appUser);
+    }
+
+    public AppUser blockAppUser(Long id) {
+        Optional<AppUser> appUserOptional = appUserRepository.findById(id);
+        if (appUserOptional.isEmpty()) throw new NoSuchElementException("User with id " + id + " couldn't be found");
+        AppUser appUser = appUserOptional.get();
+
+        appUser.setRole(UserRole.BLOCKED);
+
+        return appUserRepository.save(appUser);
+    }
+
+    public AppUser unblockAppUser(Long id) {
+        Optional<AppUser> appUserOptional = appUserRepository.findById(id);
+        if (appUserOptional.isEmpty()) throw new NoSuchElementException("User with id " + id + " couldn't be found");
+        AppUser appUser = appUserOptional.get();
+
+        appUser.setRole(UserRole.USER);
+
         return appUserRepository.save(appUser);
     }
 
