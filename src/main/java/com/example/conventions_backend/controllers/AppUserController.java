@@ -68,6 +68,16 @@ public class AppUserController {
         }
     }
 
+    @GetMapping("auth/getAllAppUsers")
+    public ResponseEntity<List<AppUser>> getAllAppUsers() {
+        return ResponseEntity.ok(appUserService.getAllUsers());
+    }
+
+    @GetMapping("auth/searchAppUsers")
+    public ResponseEntity<List<AppUser>> searchForAppUser(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(appUserService.searchForAppUser(keyword));
+    }
+
     @PostMapping("auth/blockAppUser/{id}")
     public ResponseEntity<AppUser> blockAppUser(@PathVariable("id") Long id) {
         try {

@@ -1,5 +1,6 @@
 package com.example.conventions_backend.repositories;
 
+import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.entities.Convention;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,8 +12,6 @@ public interface ConventionRepository extends JpaRepository<Convention, Long>, J
 
     List<Convention> findAllByUserId(Long id);
 
-    List<Convention> findAllByOrderByStartDateAsc();
-
     @Query("SELECT c FROM Convention c " +
             "ORDER BY " +
             "CASE c.conventionStatus " +
@@ -23,4 +22,10 @@ public interface ConventionRepository extends JpaRepository<Convention, Long>, J
             "END, " +
             "c.startDate ASC")
     List<Convention> findAllByOrderByStatusAndStartDate();
+
+    @Query("SELECT c FROM Convention c WHERE " +
+            "LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.address.city) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(c.address.country) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    List<Convention> searchForConvention(String keyword);
 }

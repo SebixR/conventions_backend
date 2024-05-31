@@ -41,6 +41,10 @@ public class ConventionService {
         return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto));
     }
 
+    public List<Convention> searchConventions(String keyword) {
+        return conventionRepository.searchForConvention(keyword);
+    }
+
     public void deleteConvention(Long id) {
         conventionRepository.deleteById(id);
     }

@@ -107,6 +107,23 @@ public class ConventionController {
         }
     }
 
+    @GetMapping("public/searchConventions")
+    public ResponseEntity<List<ConventionDto>> searchConventions(@RequestParam("keyword") String keyword) {
+        List<Convention> conventions = conventionService.searchConventions(keyword);
+
+        List<ConventionDto> conventionDtos = new ArrayList<>();
+        for (Convention convention : conventions) {
+            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
+            conventionDto.setId(convention.getId());
+            conventionDtos.add(conventionDto);
+        }
+        if (conventions.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(conventionDtos);
+        }
+    }
+
     @PostMapping("auth/deleteConvention")
     public void deleteConvention(@RequestParam("id") Long id, @RequestParam("photos") List<String> photosToSkip) {
         Optional<Convention> conventionOptional = conventionService.getConvention(id);

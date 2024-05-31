@@ -25,6 +25,10 @@ public class AppUserService {
         return appUserRepository.findAll();
     }
 
+    public List<AppUser> searchForAppUser(String keyword) {
+        return appUserRepository.searchForAppUser(keyword);
+    }
+
     @Transactional
     public AppUser getAppUserById(Long id) {
         return appUserRepository.findById(id)
