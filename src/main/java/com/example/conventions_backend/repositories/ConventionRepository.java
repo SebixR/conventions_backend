@@ -2,6 +2,9 @@ package com.example.conventions_backend.repositories;
 
 import com.example.conventions_backend.entities.AppUser;
 import com.example.conventions_backend.entities.Convention;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +15,8 @@ public interface ConventionRepository extends JpaRepository<Convention, Long>, J
 
     List<Convention> findAllByUserId(Long id);
 
+    Page<Convention> findAll(Specification<Convention> spec, Pageable pageable);
+
     @Query("SELECT c FROM Convention c " +
             "ORDER BY " +
             "CASE c.conventionStatus " +
@@ -21,11 +26,11 @@ public interface ConventionRepository extends JpaRepository<Convention, Long>, J
             "ELSE 4 " +
             "END, " +
             "c.startDate ASC")
-    List<Convention> findAllByOrderByStatusAndStartDate();
+    Page<Convention> findAllByOrderByStatusAndStartDate(Pageable pageable);
 
     @Query("SELECT c FROM Convention c WHERE " +
             "LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(c.address.city) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(c.address.country) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Convention> searchForConvention(String keyword);
+    Page<Convention> searchForConvention(String keyword, Pageable pageable);
 }

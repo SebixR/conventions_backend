@@ -6,6 +6,7 @@ import com.example.conventions_backend.entities.*;
 import com.example.conventions_backend.services.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ public class ConventionController {
     private final LinkService linkService;
     private final PhotoService photoService;
     private final TagService tagService;
+
+    private final int PAGE_SIZE = 1;
 
     @Autowired
     public ConventionController(ConventionService conventionService, AppUserService appUserService,
@@ -57,20 +60,10 @@ public class ConventionController {
     }
 
     @GetMapping("public/getAllConventions")
-    public ResponseEntity<List<ConventionDto>> getAllConventions() {
-        List<Convention> conventions = conventionService.getAllConventions();
+    public Page<ConventionDto> getAllConventions(@RequestParam("page") int page) {
+        Page<Convention> conventions = conventionService.getAllConventions(page, PAGE_SIZE);
 
-        List<ConventionDto> conventionDtos = new ArrayList<>();
-        for (Convention convention : conventions) {
-            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
-            conventionDto.setId(convention.getId());
-            conventionDtos.add(conventionDto);
-        }
-        if (conventions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(conventionDtos);
-        }
+        return conventions.map(ConventionDto::fromConvention);
     }
 
     @GetMapping("auth/getConventionsByUser/{id}")
@@ -91,37 +84,29 @@ public class ConventionController {
     }
 
     @PostMapping("public/filterConventions")
-    public ResponseEntity<List<ConventionDto>> getFilteredConventions(@RequestBody FilterRequestDto filterRequestDto) {
-        List<Convention> conventions = conventionService.getFilteredConventions(filterRequestDto);
+    public Page<ConventionDto> getFilteredConventions(@RequestBody FilterRequestDto filterRequestDto, @RequestParam("page") int page) {
+        Page<Convention> conventions = conventionService.getFilteredConventions(filterRequestDto, page, PAGE_SIZE);
 
-        List<ConventionDto> conventionDtos = new ArrayList<>();
-        for (Convention convention : conventions) {
-            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
-            conventionDto.setId(convention.getId());
-            conventionDtos.add(conventionDto);
-        }
-        if (conventions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(conventionDtos);
-        }
+        return conventions.map(ConventionDto::fromConvention);
     }
 
     @GetMapping("public/searchConventions")
-    public ResponseEntity<List<ConventionDto>> searchConventions(@RequestParam("keyword") String keyword) {
-        List<Convention> conventions = conventionService.searchConventions(keyword);
+    public Page<ConventionDto> searchConventions(@RequestParam("keyword") String keyword, @RequestParam("page") int page) {
+        Page<Convention> conventions = conventionService.searchConventions(keyword, page, PAGE_SIZE);
 
-        List<ConventionDto> conventionDtos = new ArrayList<>();
-        for (Convention convention : conventions) {
-            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
-            conventionDto.setId(convention.getId());
-            conventionDtos.add(conventionDto);
-        }
-        if (conventions.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(conventionDtos);
-        }
+        return conventions.map(ConventionDto::fromConvention);
+
+//        List<ConventionDto> conventionDtos = new ArrayList<>();
+//        for (Convention convention : conventions) {
+//            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
+//            conventionDto.setId(convention.getId());
+//            conventionDtos.add(conventionDto);
+//        }
+//        if (conventions.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.ok(conventionDtos);
+//        }
     }
 
     @PostMapping("auth/deleteConvention")

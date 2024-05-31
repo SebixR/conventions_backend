@@ -7,6 +7,9 @@ import com.example.conventions_backend.entities.ConventionStatus;
 import com.example.conventions_backend.repositories.ConventionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,20 +32,23 @@ public class ConventionService {
         return conventionRepository.save(convention);
     }
 
-    public List<Convention> getAllConventions() {
-        return conventionRepository.findAllByOrderByStatusAndStartDate();
+    public Page<Convention> getAllConventions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return conventionRepository.findAllByOrderByStatusAndStartDate(pageable);
     }
 
     public List<Convention> getConventionsByUser(Long id) {
         return conventionRepository.findAllByUserId(id);
     }
 
-    public List<Convention> getFilteredConventions(FilterRequestDto filterRequestDto) {
-        return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto));
+    public Page<Convention> getFilteredConventions(FilterRequestDto filterRequestDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return conventionRepository.findAll(ConventionSpecifications.withFilters(filterRequestDto), pageable);
     }
 
-    public List<Convention> searchConventions(String keyword) {
-        return conventionRepository.searchForConvention(keyword);
+    public Page<Convention> searchConventions(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return conventionRepository.searchForConvention(keyword, pageable);
     }
 
     public void deleteConvention(Long id) {
