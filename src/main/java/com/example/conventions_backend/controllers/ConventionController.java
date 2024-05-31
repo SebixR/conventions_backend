@@ -27,7 +27,7 @@ public class ConventionController {
     private final PhotoService photoService;
     private final TagService tagService;
 
-    private final int PAGE_SIZE = 1;
+    private final int PAGE_SIZE = 3;
 
     @Autowired
     public ConventionController(ConventionService conventionService, AppUserService appUserService,
@@ -95,18 +95,6 @@ public class ConventionController {
         Page<Convention> conventions = conventionService.searchConventions(keyword, page, PAGE_SIZE);
 
         return conventions.map(ConventionDto::fromConvention);
-
-//        List<ConventionDto> conventionDtos = new ArrayList<>();
-//        for (Convention convention : conventions) {
-//            ConventionDto conventionDto = ConventionDto.fromConvention(convention);
-//            conventionDto.setId(convention.getId());
-//            conventionDtos.add(conventionDto);
-//        }
-//        if (conventions.isEmpty()) {
-//            return ResponseEntity.noContent().build();
-//        } else {
-//            return ResponseEntity.ok(conventionDtos);
-//        }
     }
 
     @PostMapping("auth/deleteConvention")
