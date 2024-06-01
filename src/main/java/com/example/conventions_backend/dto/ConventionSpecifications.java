@@ -20,12 +20,14 @@ public class ConventionSpecifications {
             List<Predicate> predicates = new ArrayList<>();
 
             if (filterRequestDto.getName() != null && !filterRequestDto.getName().isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("name"), filterRequestDto.getName()));
+                String pattern = "%" + filterRequestDto.getName().toLowerCase() + "%";
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), pattern));
             }
 
             if (filterRequestDto.getCity() != null && !filterRequestDto.getCity().isEmpty()) {
                 Join<Convention, Address> cityJoin = root.join("address", JoinType.INNER);
-                predicates.add(criteriaBuilder.equal(cityJoin.get("city"), filterRequestDto.getCity()));
+                String pattern = "%" + filterRequestDto.getCity().toLowerCase() + "%";
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(cityJoin.get("city")), pattern));
             }
 
             if (filterRequestDto.getDate() != null && !filterRequestDto.getDate().isEmpty()) {
