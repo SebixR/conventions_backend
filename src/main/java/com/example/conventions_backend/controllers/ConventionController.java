@@ -181,6 +181,8 @@ public class ConventionController {
 
         if (appUser.getRole() == UserRole.BLOCKED)
             convention.setConventionStatus(ConventionStatus.BLOCKED);
+        if (conventionDto.getConventionStatus() == ConventionStatus.BLOCKED)
+            convention.setConventionStatus(ConventionStatus.BLOCKED);
 
         Convention savedConvention = conventionService.saveConvention(convention);
 
