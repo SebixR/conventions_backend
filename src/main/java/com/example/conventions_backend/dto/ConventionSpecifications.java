@@ -42,8 +42,22 @@ public class ConventionSpecifications {
             }
 
             if (filterRequestDto.getSelectedStatuses() != null && !filterRequestDto.getSelectedStatuses().isEmpty()) {
-                Expression<String> statusExpression = root.get("conventionStatus"); //just to get to the status, without comparing it with an array while adding
-                predicates.add(statusExpression.in(filterRequestDto.getSelectedStatuses()));
+                List<Predicate> statusPredicates = new ArrayList<>();
+                if (filterRequestDto.getSelectedStatuses().contains("OVER")) {
+                    Predicate overPredicate = criteriaBuilder.lessThan(root.get("endDate"), LocalDate.now());
+                    statusPredicates.add(overPredicate);
+                }
+                if (filterRequestDto.getSelectedStatuses().contains("ONGOING")) {
+                    Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), LocalDate.now());
+                    Predicate endDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), LocalDate.now());
+                    statusPredicates.add(criteriaBuilder.and(startDatePredicate, endDatePredicate));
+                }
+                if (filterRequestDto.getSelectedStatuses().contains("UPCOMING")) {
+                    Predicate upcomingPredicate = criteriaBuilder.greaterThan(root.get("startDate"), LocalDate.now());
+                    statusPredicates.add(upcomingPredicate);
+                }
+
+                predicates.add(criteriaBuilder.or(statusPredicates.toArray(new Predicate[0])));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

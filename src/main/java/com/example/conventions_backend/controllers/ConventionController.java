@@ -152,9 +152,7 @@ public class ConventionController {
             Optional<Convention> conventionOptional = conventionService.getConvention(id);
             if (conventionOptional.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-            ConventionStatus status = chooseStatus(conventionOptional.get().getStartDate(), conventionOptional.get().getEndDate());
-
-            Convention convention = conventionService.unblockConvention(id, status);
+            Convention convention = conventionService.unblockConvention(id);
             ConventionDto conventionDto = ConventionDto.fromConvention(convention);
             return ResponseEntity.ok(conventionDto);
         } catch (EntityNotFoundException e) {
@@ -223,30 +221,9 @@ public class ConventionController {
         convention.setEndDate(LocalDate.parse(conventionDto.getSelectedEndDate()));
         convention.setDescription(conventionDto.getDescription());
         convention.setLogo(conventionDto.getLogo());
-
-        conventionDto.setConventionStatus(chooseStatus(
-                LocalDate.parse(conventionDto.getSelectedStartDate()),
-                LocalDate.parse(conventionDto.getSelectedEndDate())));
-        //TODO Status is never updated
-
         convention.setConventionStatus(conventionDto.getConventionStatus());
 
         return convention;
-    }
-
-    public static ConventionStatus chooseStatus(LocalDate startDate, LocalDate endDate) {
-        int startDateComparison = startDate.compareTo(LocalDate.now());
-        int endDateComparison = endDate.compareTo(LocalDate.now());
-        if ((startDateComparison == 0 || startDateComparison < 0) //start date is today or passed
-                && (endDateComparison == 0 || endDateComparison > 0)) { //end date is today or upcoming
-            return ConventionStatus.ONGOING;
-        }
-        else if (startDateComparison > 0) { //start date is upcoming
-            return ConventionStatus.UPCOMING;
-        }
-        else {
-            return ConventionStatus.OVER;
-        }
     }
 
     private Address addressFromConventionDto(ConventionDto conventionDto) {

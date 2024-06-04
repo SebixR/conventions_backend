@@ -65,13 +65,13 @@ public class ConventionService {
         return conventionRepository.save(convention);
     }
 
-    public Convention unblockConvention(Long id, ConventionStatus status) {
+    public Convention unblockConvention(Long id) {
         Optional<Convention> conventionOptional = conventionRepository.findById(id);
         if (conventionOptional.isEmpty())
             throw new EntityNotFoundException("Convention with id " + id + "wasn't found");
 
         Convention convention = conventionOptional.get();
-        convention.setConventionStatus(status);
+        convention.setConventionStatus(ConventionStatus.NORMAL);
         return conventionRepository.save(convention);
     }
 

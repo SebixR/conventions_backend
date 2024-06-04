@@ -101,7 +101,7 @@ public class AppUserController {
 
             List<Convention> conventions = conventionService.getConventionsByUser(id);
             for (Convention convention : conventions) {
-                conventionService.unblockConvention(convention.getId(), ConventionController.chooseStatus(convention.getStartDate(), convention.getEndDate()));
+                conventionService.unblockConvention(convention.getId());
             }
 
             return ResponseEntity.ok(appUser);
